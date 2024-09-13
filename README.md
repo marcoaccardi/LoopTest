@@ -50,19 +50,18 @@ $ unzip freesound_mel_80_320.zip
 ### Training
 
 ``` bash
-$ CUDA_VISIBLE_DEVICES=2 python train_drum.py \
+$   python train_drum.py \
     --size 64 --batch 8 --sample_dir freesound_sample_dir \
     --checkpoint_dir freesound_checkpoint \
     --iter 100000
     mel_80_320
+
+    python train_drum.py --size 64 --batch 8 --sample_dir freesound_sample_dir --checkpoint_dir freesound_checkpoint --iter 100000 mel_80_320
 ```
 
 ### Generate audio
 ```bash
-$ CUDA_VISIBLE_DEVICES=2 python generate_audio.py \
-    --ckpt freesound_checkpoint/100000.pt \
-    --pics 2000 --data_path "./data/freesound" \
-    --store_path "./generated_freesound_one_bar"
+$ CUDA_VISIBLE_DEVICES=2 python inference/generate_audio.py --ckpt checkpoints/freesound_pretrain_one_bar.pt --pics 2000 --data_path ".\data\processed\freesound" --store_path ".\data\inference\freesound_ckpt_1"
 ```
 ### Evaluation
 #### NDB_JS

@@ -1,4 +1,4 @@
-from generator import Generator
+from .generator import Generator
 from discriminator import Discriminator
 import torch
 if __name__ == "__main__":

@@ -1,11 +1,14 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import torch
 from tqdm import tqdm
-from generator import load_generator, generate_sample
+from inference.generator_utils import load_generator, generate_sample
 from melgan_wrapper import load_vocoder
 from utils import load_mean_std, save_audio
 from parsers import get_generate_audio_parser
 import os
-
+import numpy as np
 
 def generate(args, g_ema, device, mean_latent):
     epoch = args.ckpt.split('.')[0]
