@@ -9,7 +9,7 @@ import soundfile as sf
 import yaml
 import cog
 
-from model_drum_four_bar import Generator
+from models.drum_models.model_drum_four_bar import Generator
 
 sys.path.append("./melgan")
 

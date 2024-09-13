@@ -2,12 +2,12 @@ import argparse
 
 import torch
 from torchvision import utils
-from model_drum_four_bar import Generator
+from models.drum_models.model_drum_four_bar import Generator
 from tqdm import tqdm
 
 import sys
 sys.path.append('./melgan')
-from modules import Generator_melgan
+from models.drum_models.model_drum_four_bar import Generator_melgan
 
 import yaml
 import os
