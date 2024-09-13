@@ -6,8 +6,11 @@
 
 * This is the official repository of **A Benchmarking Initiative for Audio-domain Music Generation Using the FreeSound Loop Dataset** co-authored with [Paul Chen](https://paulyuchen.com/), [Arthur Yeh](http://yentung.com/) and my supervisor [Yi-Hsuan Yang](http://mac.citi.sinica.edu.tw/~yang/). The paper has been accepted by International Society for Music Information Retrieval Conference 2021.  [[Demo Page]](https://loopgen.github.io/), [[arxiv]](https://arxiv.org/pdf/2108.01576.pdf).
 * We not only provided pretrained model to generate loops on your own but also provided scripts for you to evaluate the generated loops.
+
+## Tested on Windows10conda 
 ## Environment
 ```
+
 $ conda env create -f environment.yml 
 ```
 ## Quick Start
