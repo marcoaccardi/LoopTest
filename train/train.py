@@ -18,7 +18,7 @@ from .train_utils import (prepare_directories, initialize_training,
                                save_checkpoint, save_samples, adjust_ada_augment)
 
 # Import models and dataset
-from models.drums_1bar.model_drum import Generator, Discriminator
+from models.drums_1bar.main import Generator, Discriminator
 from utils.dataset import MultiResolutionDataset_drum
 
 # Import argument parser and environment setup
