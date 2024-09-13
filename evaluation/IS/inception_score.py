@@ -10,7 +10,7 @@ import os
 from model import FCN, ShortChunkCNN_one_bar
 sys.path.append('../')
 sys.path.append('../../')
-from dataset import MultiResolutionDataset_drum, data_sampler
+from utils.dataset import MultiResolutionDataset_drum, data_sampler
 from torchvision import transforms
 from scipy.stats import ttest_ind
 import pickle
