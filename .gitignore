@@ -21,3 +21,6 @@ freesound_checkpoint/
 freesound_sample_dir/
 evaluation/IS/compute_is_score_one.sh
 
+checkpoints/looperman_pretrain_one_bar.pt
+checkpoints/freesound_pretrain_one_bar.pt
+checkpoints/looperman_pretrain_four_bar.pt
