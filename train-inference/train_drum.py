@@ -18,7 +18,7 @@ try:
 except ImportError:
     wandb = None
 
-from models.drum_models.model_drum import Generator, Discriminator
+from models.drums_1bar.model_drum import Generator, Discriminator
 from utils.dataset import MultiResolutionDataset_drum
 from utils.distributed import (
     get_rank,

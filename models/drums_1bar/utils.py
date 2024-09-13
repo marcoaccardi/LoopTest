@@ -3,24 +3,6 @@
 import torch
 import torch.nn as nn
 
-def make_noise(log_size, device):
-    """
-    Generates random noise tensors of varying sizes for use in the generator.
-
-    Args:
-        log_size (int): The log size of the image dimensions (log2 of the image size).
-        device (torch.device): The device to create the noise on.
-
-    Returns:
-        list: List of noise tensors.
-    """
-    noises = [torch.randn(1, 1, 4, 4, device=device)]  # Starting size (4x4)
-    
-    for i in range(3, log_size + 1):
-        for _ in range(2):
-            noises.append(torch.randn(1, 1, 2 ** i, 2 ** i, device=device))
-
-    return noises
 
 class NoiseInjection(nn.Module):
     """
@@ -67,3 +49,5 @@ class ConstantInput(nn.Module):
         """
         batch = input.shape[0]
         return self.input.repeat(batch, 1, 1, 1)
+
+
