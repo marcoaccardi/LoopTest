@@ -3,8 +3,9 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from torch.autograd import Function
-from op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
+from op import upfirdn2d  # Keep only the necessary imports
 
+from .utils import NoiseInjection
 def make_kernel(k):
     """
     Create a 2D filter kernel from a 1D list and normalize it.
@@ -57,6 +58,16 @@ class EqualConv2d(nn.Module):
 class EqualLinear(nn.Module):
     """
     Fully connected layer with equalized learning rate and fused activation.
+    
+    Uses PyTorch's `LeakyReLU` instead of `fused_leaky_relu`.
+
+    Args:
+        in_dim (int): Input dimension.
+        out_dim (int): Output dimension.
+        bias (bool): Whether to use bias.
+        bias_init (float): Initial value of bias.
+        lr_mul (float): Learning rate multiplier.
+        activation (str or None): Activation function to use.
     """
     def __init__(self, in_dim, out_dim, bias=True, bias_init=0, lr_mul=1, activation=None):
         super().__init__()
@@ -69,13 +80,20 @@ class EqualLinear(nn.Module):
         self.scale = (1 / math.sqrt(in_dim)) * lr_mul
         self.lr_mul = lr_mul
 
+        # Scaling factor to match FusedLeakyReLU behavior
+        self.output_scale = 2 ** 0.5
+
     def forward(self, input):
-        if self.activation:
-            out = F.linear(input, self.weight * self.scale)
-            out = fused_leaky_relu(out, self.bias * self.lr_mul)
+        out = F.linear(input, self.weight * self.scale)
+
+        if self.activation == "leaky_relu":
+            # Use PyTorch's built-in LeakyReLU and apply scaling
+            out = F.leaky_relu(out, negative_slope=0.2) * self.output_scale
         else:
             out = F.linear(input, self.weight * self.scale, bias=self.bias * self.lr_mul)
+
         return out
+
 
 class ToRGB(nn.Module):
     """
@@ -143,11 +161,6 @@ class StyledConv(nn.Module):
         upsample (bool, optional): Whether to upsample the input before convolution. Default is False.
         blur_kernel (list, optional): Kernel used for blurring during upsampling. Default is [1, 3, 3, 1].
         demodulate (bool, optional): Whether to apply demodulation after style modulation. Default is True.
-    
-    This class integrates:
-    - Modulated convolution (`ModulatedConv2d`) which uses a style vector to modify the convolution kernel.
-    - Noise injection to add noise at each layer, improving stochasticity.
-    - Activation using fused LeakyReLU for non-linearity.
     """
     
     def __init__(self, in_channel, out_channel, kernel_size, style_dim, upsample=False, blur_kernel=[1, 3, 3, 1], demodulate=True):
@@ -162,8 +175,11 @@ class StyledConv(nn.Module):
         # Injecting noise after convolution
         self.noise = NoiseInjection()
 
-        # Using Fused LeakyReLU for activation
-        self.activate = FusedLeakyReLU(out_channel)
+        # Using PyTorch's LeakyReLU for activation
+        self.activate = nn.LeakyReLU(negative_slope=0.2)
+
+        # Scaling factor to match FusedLeakyReLU behavior
+        self.scale = 2 ** 0.5
 
     def forward(self, input, style, noise=None):
         """
@@ -183,10 +199,12 @@ class StyledConv(nn.Module):
         # Inject noise into the output
         out = self.noise(out, noise=noise)
         
-        # Apply activation function
-        out = self.activate(out)
+        # Apply activation function (LeakyReLU) and scaling
+        out = self.activate(out) * self.scale
         
         return out
+
+
 
 class Upsample(nn.Module):
     """

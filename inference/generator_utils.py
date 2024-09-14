@@ -2,6 +2,8 @@ import torch
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import os
+os.environ['CUDA_HOME'] = "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.3"
 from models.drums_1bar.main import Generator
 
 def load_generator(ckpt, args, device):

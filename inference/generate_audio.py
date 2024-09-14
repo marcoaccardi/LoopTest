@@ -1,5 +1,8 @@
 import os
 import sys
+import os
+os.environ['CUDA_HOME'] = "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.3"
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import torch
 from tqdm import tqdm
@@ -32,7 +35,14 @@ def generate(args, g_ema, device, mean_latent):
             print(f'Generated {i}th wav file')
 
 if __name__ == "__main__":
-    device = "cuda"
+    # Check if CUDA is available and print the result
+    if torch.cuda.is_available():
+        print("CUDA is available! Using GPU for processing.")
+        device = "cuda"
+    else:
+        print("CUDA is not available. Using CPU instead.")
+        device = "cpu"
+
     parser = get_generate_audio_parser()
     args = parser.parse_args()
 
